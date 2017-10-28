@@ -1,6 +1,8 @@
 # tutorial-gremlin
 Notes, etc. on learning TinkerPop &amp; Gremlin
 
+http://www.fromdev.com/2013/09/Gremlin-Example-Query-Snippets-Graph-DB.html
+
 ## First steps
 After downloading and following instructions on
 http://tinkerpop.apache.org/docs/current/tutorials/getting-started/, I discovered that Java is required...
@@ -57,8 +59,25 @@ g.V().has('name','marko').out('created')
 g.V().has('name','marko').out('created').values('name')
 
 ```
-
-
+- Some advanced commands:
+```
+graph = TinkerFactory.createModern()
+g = graph.traversal()
+// names of two developers:
+g.V().has('name',within('vadas','marko')).values('age')
+// their average age:
+g.V().has('name',within('vadas','marko')).values('age').mean()
+// who collaborates with marko:
+g.V().has('name','marko').out('created').in('created').values('name')
+// let's exclude marko as a (self) collaborator
+g.V().has('name','marko').as('exclude').out('created').in('created').where(neq('exclude')).values('name')
+// some group by; but this isn't very useful
+g.V().group().by(label).by('name')
+// returns:
+// [software:[lop, ripple], person:[marko, vadas, josh, peter]]
+// which leads to a cross product. Doesn't show which collaborated
+// on lop vs which collaborated on riple.
+```
 
 
 
